@@ -123,7 +123,7 @@ Presenter - презентер содержит основную логику п
   `post<T>(uri: string, data: object, method?: ApiPostMethods)` — выполняет POST/PUT/DELETE‑запрос по URI с данными `data` и необязательным методом `method` (по умолчанию — `'POST'`), возвращает промис с данными типа `T`.
 
 `interface IProduct` - Описание продукта:
-  >`id: string` — уникальный идентификатор продукта;
+  `id: string` — уникальный идентификатор продукта;
   `description: string` — описание;
   `image: string` — URL изображения;
   `title: string` — название;
@@ -133,17 +133,17 @@ Presenter - презентер содержит основную логику п
 `type TPayment` - Допустимые способы оплаты: `'card' | 'cash'` (карта или наличные).
 
 `interface IBuyer` - Данные покупателя:
-  >`payment: TPayment | ''` — способ оплаты (может быть пустым);
+  `payment: TPayment | ''` — способ оплаты (может быть пустым);
   `email: string` — email;
   `phone: string` — телефон;
   `address: string` — адрес доставки.
 
 `interface IApiGet` - Ответ на GET‑запрос к API:
-  >`total: number` — общее количество продуктов;
+  `total: number` — общее количество продуктов;
   `items: IProduct[]` — массив продуктов (объектов типа `IProduct`).
 
 `interface IApiPost` - Данные для POST‑запроса (наследует поля от `IBuyer`):
-  >`total: number` — общая сумма заказа;
+  `total: number` — общая сумма заказа;
   `items: string[]` — массив идентификаторов продуктов (строк).
 
 ### Модели данных
