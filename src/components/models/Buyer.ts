@@ -1,4 +1,4 @@
-import { TPayment, IBuyer } from "../../types/index.ts";
+import { TPayment, IBuyer, BuyerValidationErrors } from "../../types/index.ts";
 
 /**
  * Модель покупателя
@@ -44,31 +44,24 @@ export class Buyer implements IBuyer {
   /**
    * Валидирует данные покупателя
    */
-  validateData(): Record<keyof IBuyer, string> {
-    const errors: Record<keyof IBuyer, string> = {} as Record<keyof IBuyer, string>;
+  validateData(): BuyerValidationErrors {
+    const errors: BuyerValidationErrors = {} as BuyerValidationErrors;
     // Валидация оплаты
     if (this.payment === '') {
       errors.payment = 'Не выбран вид оплаты';
     }
     // Валидация адреса
-    if (!this.address || this.address.trim() === '') {
+    if (!this.address?.trim()) {
       errors.address = 'Адрес не может быть пустым';
     }
     // Валидация номера телефона
-    if (!this.phone || this.phone.trim() === '') {
+    if (!this.phone?.trim()) {
       errors.phone = 'Телефон не может быть пустым';
     }
 
-    if (this.phone.trim() != '' && !/^\+?[0-9]{10,15}$/.test(this.phone)) {
-      errors.phone = 'Некорректный телефон';
-    }
     // Валидация почтового ящика
-    if (!this.email || this.email.trim() === '') {
+    if (!this.email?.trim()) {
       errors.email = 'Email не может быть пустым';
-    }
-    
-    if (this.email.trim() != '' && !/^\S+@\S+\.\S+$/.test(this.email)) {
-      errors.email = 'Некорректный email';
     }
 
     return errors;
