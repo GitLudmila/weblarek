@@ -13,7 +13,7 @@ productsModel.setItems(apiProducts.items);
 
 console.log(`Массив товаров из каталога: `, productsModel.getItems());
 
-// console.log(`Продукт по ID: `, productsModel.getProductById('854cef69-976d-4c2a-a18c-2aa45046c390'));
+console.log(`Продукт по ID: `, productsModel.getProductById('854cef69-976d-4c2a-a18c-2aa45046c390'));
 
 
 // Проверка модели покупателя
@@ -25,27 +25,39 @@ buyerModel.setData({ payment: 'card' });
 
 console.log(`Данные покупателя: `, buyerModel.getData());
 
-// const errors = buyerModel.validateData();
-// if (Object.keys(errors).length > 0) {
-//   console.log('Ошибки валидации:', errors);
-// } else {
-//   console.log('Данные валидны');
-// }
-// buyerModel.clearData();
-// console.log(`Данные покупателя: `, buyerModel.getData());
+const errors = buyerModel.validateData();
+
+if (Object.keys(errors).length > 0) {
+  console.log('Ошибки валидации:', errors);
+} else {
+  console.log('Данные валидны');
+}
+
+buyerModel.clearData();
+console.log(`Данные покупателя: `, buyerModel.getData());
+
+const errorsAgain = buyerModel.validateData();
+if (Object.keys(errorsAgain).length > 0) {
+  console.log('Ошибки валидации:', errorsAgain);
+} else {
+  console.log('Данные валидны');
+}
 
 // Проверка модели корзины товаров
 const basket = new ShoppingCart();
 basket.addItem('854cef69-976d-4c2a-a18c-2aa45046c390', apiProducts.items);
 basket.addItem('412bcf81-7e75-4e70-bdb9-d3c73c9803b7', apiProducts.items);
 
-// basket.removeItem('854cef69-976d-4c2a-a18c-2aa45046c390');
-// basket.clearCart();
-
 console.log(`Массив товаров из корзины: `, basket.getItems());
-// console.log(`Колю-во товаров в корзинe: `, basket.getItemCount());
-// console.log(`Полная цена товаров в корзинe: `, basket.getTotalPrice());
-// console.log(`Наличие товара в корзине: `, basket.hasItem('412bcf81-7e75-4e70-bdb9-d3c73c9803b7'));
+console.log(`Колю-во товаров в корзинe: `, basket.getItemCount());
+console.log(`Полная цена товаров в корзинe: `, basket.getTotalPrice());
+console.log(`Наличие товара в корзине: `, basket.hasItem('412bcf81-7e75-4e70-bdb9-d3c73c9803b7'));
+
+basket.removeItem('854cef69-976d-4c2a-a18c-2aa45046c390');
+console.log(`Массив товаров из корзины с 1 удаленным товаром: `, basket.getItems());
+
+basket.clearCart();
+console.log(`Пустая корзина: `, basket.getItems());
 
 // Проверка модели коммуникационного слоя
 const apiService = new ApiCommunication(new Api(API_URL));
