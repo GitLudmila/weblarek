@@ -51,7 +51,7 @@ console.log(`Массив товаров из корзины: `, basket.getItems
 const apiService = new ApiCommunication(new Api(API_URL));
 
 apiService
-  .getFetch()
+  .getProducts()
   .then((response) => {
     productsModel.setItems(response.items);
     console.log("Сохраненный массив с сервера:", productsModel.getItems());

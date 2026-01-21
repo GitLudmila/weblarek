@@ -49,8 +49,7 @@ export interface IApiGet {
 /**
  * Интерфейс API post запроса
 */
-
 export interface IApiPost extends IBuyer {
+  id: string;
   total: number;
-  items: string[];
 }

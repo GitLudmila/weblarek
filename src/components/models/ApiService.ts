@@ -14,7 +14,7 @@ export class ApiCommunication {
   /**
    * Метод получает список товаров с эндпоинта /product/
    */
-  getFetch(): Promise<IApiGet> {
+  getProducts(): Promise<IApiGet> {
       return this.api.get<IApiGet>("/product");
   }
 
