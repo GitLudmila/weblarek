@@ -58,3 +58,11 @@ export interface IApiPost extends IBuyer {
   id: string;
   total: number;
 }
+
+/**
+ * Интерфейс ответа API post запроса
+*/
+export interface IApiPostResponse {
+  id: string;
+  total: number;
+}

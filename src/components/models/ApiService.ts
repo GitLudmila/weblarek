@@ -1,4 +1,4 @@
-import { IApiGet, IApiPost } from "../../types";  
+import { IApiGet, IApiPost, IApiPostResponse } from "../../types";  
 import { Api } from "../base/Api";  
 
 /**
@@ -21,7 +21,7 @@ export class ApiCommunication {
   /**
    * Метод отправляет данные заказа на эндпоинт /order/
    */
-  async postOrder(data: IApiPost) {
-    return await this.api.post<IApiPost[]>("/order", data);
+  async postOrder(data: IApiPost): Promise<IApiPostResponse> { 
+    return this.api.post<IApiPostResponse>("/order", data);
   }
 }
