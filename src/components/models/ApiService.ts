@@ -5,10 +5,10 @@ import { Api } from "../base/Api";
  * Слой коммуникации с серверным API
  */
 export class ApiCommunication {
-  api: Api; 
+  protected api: Api; 
 
   constructor(api: Api) {
-    this.api = api;  
+    this.api = api;
   } 
 
   /**

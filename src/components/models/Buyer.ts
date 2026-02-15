@@ -1,4 +1,5 @@
 import { TPayment, IBuyer, BuyerValidationErrors } from "../../types/index.ts";
+import { IEvents } from "../base/Events.ts";
 
 /**
  * Модель покупателя
@@ -9,6 +10,8 @@ export class Buyer implements IBuyer {
   phone = '';
   email = '';
 
+  constructor(protected events: IEvents) {}
+
   /**
    * Сохраняет одно или несколько полей, не затрагивая остальные
    */
@@ -17,6 +20,7 @@ export class Buyer implements IBuyer {
     if (data.address !== undefined) this.address = data.address;
     if (data.phone !== undefined) this.phone = data.phone;
     if (data.email !== undefined) this.email = data.email;
+    this.events.emit('buyer:changed', this.getData());
   }
 
   /**
@@ -44,7 +48,7 @@ export class Buyer implements IBuyer {
   /**
    * Валидирует данные покупателя
    */
-  validateData(): BuyerValidationErrors {
+  validateDataFirstStep(): BuyerValidationErrors {
     const errors: BuyerValidationErrors = {} as BuyerValidationErrors;
     // Валидация оплаты
     if (this.payment === '') {
@@ -54,6 +58,12 @@ export class Buyer implements IBuyer {
     if (!this.address?.trim()) {
       errors.address = 'Адрес не может быть пустым';
     }
+
+    return errors;
+  }
+
+  validateDataSecondStep(): BuyerValidationErrors {
+    const errors: BuyerValidationErrors = {} as BuyerValidationErrors;
     // Валидация номера телефона
     if (!this.phone?.trim()) {
       errors.phone = 'Телефон не может быть пустым';

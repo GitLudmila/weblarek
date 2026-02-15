@@ -66,3 +66,10 @@ export interface IApiPostResponse {
   id: string;
   total: number;
 }
+
+/**
+ * Интерфейс действий карточек товара
+*/
+export type ICardActions = {
+    onClick: () => void;
+}
