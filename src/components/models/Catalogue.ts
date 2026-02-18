@@ -37,7 +37,7 @@ export class ProductCatalog {
    */
   saveSelectedProduct(product: IProduct): void {
     this.selectedProduct = product;
-    this.events.emit('product:selected', product);
+    this.events.emit('product:selected');
   }
 
   /**

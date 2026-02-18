@@ -1,8 +1,7 @@
 import { Card } from "./Card";
 import { ensureElement } from "../../../utils/utils";
-import { TCardCatalog } from "../../../types";
+import { ICardActions, TCardCatalog } from "../../../types";
 import { categoryMap, CDN_URL } from "../../../utils/constants";
-import { IEvents } from "../../base/Events";
 
 type CategoryKey = keyof typeof categoryMap;
 
@@ -10,19 +9,17 @@ export class CardCatalog extends Card<TCardCatalog> {
   protected imageElement: HTMLImageElement;
   protected categoryElement: HTMLElement;
   readonly titleText: string;
-  readonly idElement: string;
 
-  constructor(protected events: IEvents, container: HTMLElement) {
+  constructor(container: HTMLElement, actions?: ICardActions) {
     super(container);
 
     this.titleText = ensureElement<HTMLImageElement>('.card__title', this.container).textContent;
     this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
     this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
-    this.idElement = '';
-
-    this.container.addEventListener('click', () => {
-      this.events.emit('product:clicked', { cardIndex: this.idElement});
-    });
+    
+    if(actions?.onClick) {
+      this.container.addEventListener('click', actions.onClick);
+    }
   }
 
   set category(value: CategoryKey) {

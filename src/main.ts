@@ -19,6 +19,7 @@ import { Api } from './components/base/Api.ts';
 import { API_URL } from './utils/constants.ts';
 import { cloneTemplate, ensureElement } from './utils/utils.ts';
 import { EventEmitter } from './components/base/Events.ts';
+import { IProduct } from './types/index.ts';
 
 const events = new EventEmitter();
 
@@ -46,7 +47,15 @@ events.on('products:changed', () => {
 
   const cards = products.map((product) => {
     const cardCatalogTemplate = cloneTemplate<HTMLElement>('#card-catalog');
-    const card = new CardCatalog(events, cardCatalogTemplate);
+    const card = new CardCatalog(
+      cardCatalogTemplate,
+      {
+        onClick: () => {
+        events.emit('card-open', product);
+      }
+      }
+    );
+    
     return card.render(product);
   });
 
@@ -57,14 +66,14 @@ events.on('product:selected', () => {
   const product = productsModel.getSelectedProduct();
   const detailedCardTemplate = cloneTemplate<HTMLElement>('#card-preview');
   const detailedCard = new CardDetailed(events, detailedCardTemplate);
-  detailedCard.render({ product });
+  const renderedCard = detailedCard.render(product);
   modal.open();
-  modal.render({ content: detailedCard });
+  modal.render({ content: renderedCard });
 });
 
-events.on('product:clicked', (cardIndex) => {
-  productsModel.saveSelectedProduct(cardIndex);
-  console.log(cardIndex);
+
+events.on('card-open', (product: IProduct) => {
+    productsModel.saveSelectedProduct(product);
 });
 
 // События корзины товаров
