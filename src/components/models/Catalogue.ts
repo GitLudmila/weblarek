@@ -15,7 +15,7 @@ export class ProductCatalog {
    */
   setItems(products: IProduct[]): void {
     this.allProducts = [...products]; // Создаём копию массива
-    this.events.emit('productCatalog:changed', this.allProducts);
+    this.events.emit('products:changed', this.allProducts);
   }
 
   /**

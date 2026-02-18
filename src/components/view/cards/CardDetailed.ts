@@ -1,8 +1,8 @@
 import { Card } from "./Card";
-import { ensureElement } from "../../utils/utils";
-import { IProduct } from "../../types";
-import { categoryMap, CDN_URL } from "../../utils/constants";
-import { IEvents } from "../base/Events";
+import { ensureElement } from "../../../utils/utils";
+import { IProduct } from "../../../types";
+import { categoryMap, CDN_URL } from "../../../utils/constants";
+import { IEvents } from "../../base/Events";
 
 type CategoryKey = keyof typeof categoryMap;
 
@@ -16,7 +16,7 @@ export class CardDetailed extends Card<IProduct> {
 
   readonly titleText: string;
 
-  constructor(protected events: IEvents, container: HTMLElement, private idElement: string) {
+  constructor(protected events: IEvents, container: HTMLElement, private idElement?: string) {
     super(container);
 
     this.titleText = ensureElement<HTMLImageElement>('.card__title', this.container).textContent;
@@ -28,9 +28,9 @@ export class CardDetailed extends Card<IProduct> {
 
     this.buttonElement.addEventListener('click', () => {
       if (this.inCart) {
-        this.events.emit('product:remove', { id: this.idElement })
+        this.events.emit('product-basket:remove', { id: this.idElement })
       } else {
-        this.events.emit('product:add', { id: this.idElement });
+        this.events.emit('product-basket:add', { id: this.idElement });
       }
     })
   }

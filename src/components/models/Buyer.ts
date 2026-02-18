@@ -43,6 +43,7 @@ export class Buyer implements IBuyer {
     this.address = '';
     this.phone = '';
     this.email = '';
+    this.events.emit('buyer:changed', this.getData());
   }
 
   /**

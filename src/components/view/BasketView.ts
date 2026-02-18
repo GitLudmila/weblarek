@@ -1,11 +1,7 @@
 import { Component } from "../base/Component";
 import { ensureElement } from "../../utils/utils";
 import { IEvents } from "../base/Events";
-
-interface IBasket {
-    items: HTMLElement[];
-    total: number;
-}
+import { IBasket } from "../../types";
 
 export class Basket extends Component<IBasket> {
     private totalPriceBasket: HTMLElement;
@@ -20,7 +16,7 @@ export class Basket extends Component<IBasket> {
         this.totalPriceBasket = ensureElement<HTMLElement>('.basket__price', this.container);
 
         this.btnBasket.addEventListener('click', () => {
-            this.events.emit('basket:checkout')
+            this.events.emit('basket:checkout');
         })
     }
 

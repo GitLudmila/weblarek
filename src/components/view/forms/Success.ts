@@ -1,10 +1,7 @@
-import { Component } from "../base/Component";
-import { IEvents } from "../base/Events";
-import { ensureElement } from "../../utils/utils";
-
-interface ISuccess {
-  total: number;
-}
+import { Component } from "../../base/Component";
+import { IEvents } from "../../base/Events";
+import { ensureElement } from "../../../utils/utils";
+import { ISuccess } from "../../../types";
 
 export class Success extends Component<ISuccess> {
   private totalPrice: HTMLElement;
