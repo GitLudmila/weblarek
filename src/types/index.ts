@@ -68,59 +68,10 @@ export interface IApiPostResponse {
 }
 
 /**
- * Интерфейс шапки
-*/ 
-export interface IHeader {
-  counter: number;
-}
-
-/**
- * Интерфейс галереи
-*/
-export interface IGallery {
-  items: HTMLElement[];
-};
-
-/**
- * Общий тип для карточки
-*/
-export type TCard = Pick<IProduct, 'title' | 'price'>;
-
-/**
- * Тип для карточки каталога
-*/
-export type TCardCatalog = Pick<IProduct, 'image' | 'category'>;
-
-/** 
- * Тип для карточки отображения модального окна корзины
-*/
-export type TCardBasket = Pick<IProduct, 'id'>;
-
-/**
  * Интерфейс действий карточек товара
 */
 export type ICardActions = {
     onClick: () => void;
 }
 
-/**
- * Интерфейс модального окна
-*/
-export interface IModal {
-  content: HTMLElement;
-}
-
-/**
- * Интерфейс модального окна корзины
-*/
-export interface IBasket {
-    items: HTMLElement[];
-    total: number;
-}
-
-/**
- * Интерфейс модального окна успешного заказа
-*/
-export interface ISuccess {
-  total: number;
-}
+export type TCardPreview = IProduct & {buttonText?: string};

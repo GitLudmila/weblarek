@@ -49,7 +49,7 @@ export class Buyer implements IBuyer {
   /**
    * Валидирует данные покупателя
    */
-  validateDataFirstStep(): BuyerValidationErrors {
+  validateData(): BuyerValidationErrors {
     const errors: BuyerValidationErrors = {} as BuyerValidationErrors;
     // Валидация оплаты
     if (this.payment === '') {
@@ -59,17 +59,10 @@ export class Buyer implements IBuyer {
     if (!this.address?.trim()) {
       errors.address = 'Адрес не может быть пустым';
     }
-
-    return errors;
-  }
-
-  validateDataSecondStep(): BuyerValidationErrors {
-    const errors: BuyerValidationErrors = {} as BuyerValidationErrors;
     // Валидация номера телефона
     if (!this.phone?.trim()) {
       errors.phone = 'Телефон не может быть пустым';
     }
-
     // Валидация почтового ящика
     if (!this.email?.trim()) {
       errors.email = 'Email не может быть пустым';

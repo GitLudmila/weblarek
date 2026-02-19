@@ -1,7 +1,11 @@
 import { Component } from "../base/Component";
 import { ensureElement } from "../../utils/utils";
 import { IEvents } from "../base/Events";
-import { IBasket } from "../../types";
+
+interface IBasket {
+    items: HTMLElement[];
+    total: number;
+}
 
 export class Basket extends Component<IBasket> {
     private totalPriceBasket: HTMLElement;
@@ -16,12 +20,16 @@ export class Basket extends Component<IBasket> {
         this.totalPriceBasket = ensureElement<HTMLElement>('.basket__price', this.container);
 
         this.btnBasket.addEventListener('click', () => {
-            this.events.emit('basket:checkout');
+            this.events.emit('order:checkout');
         })
     }
 
-    addItem(item: HTMLElement): void {
-      this.basketList.appendChild(item);
+    disableButton() {
+        this.btnBasket.setAttribute('disabled', 'disabled');
+    }
+
+    enableButton() {
+        this.btnBasket.removeAttribute('disabled');
     }
 
     get countElements(): number {

@@ -1,8 +1,7 @@
 import { Card } from "./Card";
 import { ensureElement } from "../../../utils/utils";
-import { IProduct } from "../../../types";
+import { ICardActions, IProduct } from "../../../types";
 import { categoryMap, CDN_URL } from "../../../utils/constants";
-import { IEvents } from "../../base/Events";
 
 type CategoryKey = keyof typeof categoryMap;
 
@@ -11,12 +10,11 @@ export class CardDetailed extends Card<IProduct> {
   protected categoryElement: HTMLElement;
   protected descriptionElement: HTMLElement;
   protected priceElement: HTMLElement;
-  private inCart: boolean = false;
   protected buttonElement: HTMLButtonElement;
 
   readonly titleText: string;
 
-  constructor(protected events: IEvents, container: HTMLElement, private idElement?: string) {
+  constructor(container: HTMLElement, actions?: ICardActions) {
     super(container);
 
     this.titleText = ensureElement<HTMLImageElement>('.card__title', this.container).textContent;
@@ -25,14 +23,18 @@ export class CardDetailed extends Card<IProduct> {
     this.descriptionElement = ensureElement<HTMLImageElement>('.card__text', this.container);
     this.priceElement = ensureElement<HTMLImageElement>('.card__price', this.container);
     this.buttonElement = ensureElement<HTMLButtonElement>('.card__button', this.container);
+    
+    if (actions?.onClick) {
+      this.buttonElement.addEventListener('click', actions.onClick);
+    }
+  }
 
-    this.buttonElement.addEventListener('click', () => {
-      if (this.inCart) {
-        this.events.emit('product-basket:remove', { id: this.idElement })
-      } else {
-        this.events.emit('product-basket:add', { id: this.idElement });
-      }
-    })
+  disableButton() {
+    this.buttonElement.setAttribute('disabled', 'disabled');
+  }
+
+  set buttonText(value: string) {
+    this.buttonElement.textContent = value;
   }
 
   set category(value: CategoryKey) {
@@ -46,13 +48,5 @@ export class CardDetailed extends Card<IProduct> {
 
   set description(value: string) {
     this.descriptionElement.textContent = value;
-  }
-
-  set inCartState(value: boolean) {
-    this.inCart = value;
-
-    if (this.buttonElement) {
-      this.buttonElement.textContent = value ? 'Удалить из корзины': 'Купить';
-    }
   }
 }
