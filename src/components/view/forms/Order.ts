@@ -1,7 +1,7 @@
 import { Form } from "./Form.ts";
 import { ensureElement } from "../../../utils/utils.ts";
 import { IEvents } from "../../base/Events.ts";
-import { paymentMethods } from "../../../utils/constants.ts";
+import { paymentMethods } from "../../../utils/utils.ts";
 import { BuyerValidationErrors } from "../../../types/index.ts";
 
 type TOrder = {errors: BuyerValidationErrors;} & { buttonActive: string, address: string };

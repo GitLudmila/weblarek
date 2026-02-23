@@ -136,3 +136,8 @@ export function createElement<
     }
     return element;
 }
+
+export const paymentMethods: { [key: string]: string } = {
+  'card': 'online',
+  'cash': 'offline'
+}

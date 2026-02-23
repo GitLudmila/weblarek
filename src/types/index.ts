@@ -41,7 +41,7 @@ export interface IBuyer {
 /**
  * Тип для ошибок валидации покупателя
  */ 
-export type BuyerValidationErrors = Record<keyof IBuyer, string>;
+export type BuyerValidationErrors = Partial<Record<keyof IBuyer, string>>;
 
 /**
  * Интерфейс API get запроса

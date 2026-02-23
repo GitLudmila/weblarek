@@ -32,15 +32,11 @@ export class Basket extends Component<IBasket> {
         this.btnBasket.removeAttribute('disabled');
     }
 
-    get countElements(): number {
-        return this.basketList.children.length;
-    }
-
     set total(value: number) {
         this.totalPriceBasket.textContent = `${value} синапсов`;
     }
 
     set fill(items: HTMLLIElement[]) {
-        items ? this.basketList.replaceChildren(...items) : this.basketList.textContent = 'Корзина пуста';
+        this.basketList.replaceChildren(...items);
     }
 }

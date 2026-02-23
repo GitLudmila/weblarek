@@ -98,7 +98,7 @@ events.on('card-open', (product: IProduct) => {
 });
 
 // События корзины товаров
-let renderedBasket: HTMLElement;
+let renderedBasket: HTMLElement = basket.render();
 
 events.on('basket:changed', () => {
   header.render({counter: basketModel.getItemCount()});
