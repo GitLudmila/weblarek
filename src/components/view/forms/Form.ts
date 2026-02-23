@@ -2,26 +2,33 @@ import { Component } from "../../base/Component";
 import { ensureElement } from "../../../utils/utils";
 import { IEvents } from "../../base/Events";
 
-interface IForm {
-  error: string;
-}
+export abstract class Form<T> extends Component<T> {
+  protected errorForm: HTMLElement;
+  protected btnSubmit: HTMLButtonElement;
 
-export class Form extends Component<IForm> {
-  private errorForm: HTMLElement;
-  private btnSubmit: HTMLButtonElement;
-
-  constructor (private events: IEvents, container: HTMLElement) {
+  constructor (protected events: IEvents, container: HTMLElement) {
     super(container);
         
     this.errorForm = ensureElement<HTMLElement>('.form__errors', this.container);
-    this.btnSubmit = ensureElement<HTMLButtonElement>('.button', this.container);
-
-    this.btnSubmit.addEventListener('click', () => {
-      this.events.emit('order:submit');
-    })
+    this.btnSubmit = ensureElement<HTMLButtonElement>('button[type = "submit"]', this.container);
   }
 
   set error(value: string) {
     this.errorForm.textContent = value;
+  }
+
+  inputHandler = (evt: Event)=> {
+    const target = evt.target;
+    if (target instanceof HTMLInputElement) {
+      this.events.emit('form:change', {[target.name]: (target.value)});
+    }
+  }
+
+  disableNextButton() {
+    this.btnSubmit.setAttribute('disabled', 'disabled');
+  }
+
+  enableNextButton() {
+    this.btnSubmit.removeAttribute('disabled');
   }
 }

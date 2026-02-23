@@ -3,7 +3,7 @@ import { ensureElement } from "../../utils/utils";
 import { IEvents } from "../base/Events";
 
 interface IBasket {
-    items: HTMLElement[];
+    fill: HTMLElement[];
     total: number;
 }
 
@@ -38,5 +38,9 @@ export class Basket extends Component<IBasket> {
 
     set total(value: number) {
         this.totalPriceBasket.textContent = `${value} синапсов`;
+    }
+
+    set fill(items: HTMLLIElement[]) {
+        items ? this.basketList.replaceChildren(...items) : this.basketList.textContent = 'Корзина пуста';
     }
 }

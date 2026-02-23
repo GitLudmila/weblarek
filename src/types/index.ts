@@ -75,3 +75,5 @@ export type ICardActions = {
 }
 
 export type TCardPreview = IProduct & {buttonText?: string};
+
+export type TValidationErrors = { [key: string]: string };
