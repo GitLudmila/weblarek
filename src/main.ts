@@ -24,7 +24,7 @@ import { Api } from './components/base/Api.ts';
 import { API_URL } from './utils/constants.ts';
 import { cloneTemplate, ensureElement } from './utils/utils.ts';
 import { EventEmitter } from './components/base/Events.ts';
-import { IProduct, TCardPreview, BuyerValidationErrors, IBuyer, IApiPost } from './types/index.ts';
+import { IProduct, BuyerValidationErrors, IBuyer, IApiPost } from './types/index.ts';
 
 const events = new EventEmitter();
 
@@ -40,6 +40,7 @@ const gallery = new Gallery(ensureElement<HTMLElement>('.gallery'));
 const header = new Header(events, ensureElement<HTMLElement>('.header'));
 const modal = new Modal(events, ensureElement<HTMLElement>('#modal-container'));
 const basket = new Basket(events, cloneTemplate('#basket'));
+const detailedCard = new CardDetailed(events, cloneTemplate<HTMLElement>('#card-preview'));
 
 apiService
   .getProducts()
@@ -68,27 +69,20 @@ events.on('products:changed', () => {
 });
 
 events.on('product:selected', () => {
-  const product: IProduct = productsModel.getSelectedProduct() as IProduct;
-  const item: TCardPreview = {...product};
-  const detailedCard = new CardDetailed(
-    cloneTemplate<HTMLElement>('#card-preview'),
-    {onClick: () => {
-        basketModel.hasItem(product.id)
-        ? events.emit('product-basket:remove', product)
-        : events.emit('product-basket:add', product);
-    modal.close();
-  }});
+  const product = {...productsModel.getSelectedProduct() as IProduct};
 
   if (product.price == null) {
-    item['buttonText'] = 'Недоступно';
+    detailedCard.buttonText = 'Недоступно';
     detailedCard.disableButton();
   } else if (!basketModel.hasItem(product.id)) {
-    item['buttonText'] = 'Купить';
+    detailedCard.buttonText = 'Купить';
+    detailedCard.ableButton();
   } else if (basketModel.hasItem(product.id)) {
-    item['buttonText'] = 'Удалить из корзины';
+    detailedCard.buttonText = 'Удалить из корзины';
+    detailedCard.ableButton();
   }
 
-  const renderedCard = detailedCard.render(item);
+  const renderedCard = detailedCard.render(product);
   modal.render({ content: renderedCard });
   modal.open();
 });
@@ -97,8 +91,22 @@ events.on('card-open', (product: IProduct) => {
     productsModel.saveSelectedProduct(product);
 });
 
+events.on('preview:toggle', () => {
+  const product = productsModel.getSelectedProduct();
+
+  if(product !== null) {
+      if(basketModel.hasItem(product.id)) {
+        basketModel.removeItem(product);
+      } else {
+        basketModel.addItem(product);
+      }
+  };
+
+  modal.close();
+
+});
+
 // События корзины товаров
-let renderedBasket: HTMLElement = basket.render();
 
 events.on('basket:changed', () => {
   header.render({counter: basketModel.getItemCount()});
@@ -112,21 +120,14 @@ events.on('basket:changed', () => {
       }});
       return card.render({...item, index: ++index});
   });
-  renderedBasket = basket.render({fill: renderedItems, total: basketModel.getTotalPrice()}); 
+  basket.render({fill: renderedItems, total: basketModel.getTotalPrice()}); 
 });
 
 events.on('basket:open', () => {
-    modal.render({content: renderedBasket});
+    modal.render({content: basket.render()});
     modal.open();
 });
 
-events.on('product-basket:add', (product: IProduct) => {
-  basketModel.addItem(product);
-});
-
-events.on('product-basket:remove', (product: IProduct) => {
-  basketModel.removeItem(product);
-});
 
 // События данных покупателя и формы
 function filterErrors(errors: BuyerValidationErrors, fields: string[]): BuyerValidationErrors {
@@ -141,19 +142,20 @@ const contactsStepErrors: Array<keyof IBuyer> = ['phone', 'email'];
 
 events.on('buyer:changed', () => {
   const errors = buyerModel.validateData();
+  const products = buyerModel.getData();
   const orderFormErrors = filterErrors(errors, orderStepErrors);
   const contactsFormErrors = filterErrors(errors, contactsStepErrors);
 
   orderForm.render({
     errors: orderFormErrors,
-    buttonActive: buyerModel.getData().payment,
-    address: buyerModel.getData().address
+    buttonActive: products.payment,
+    address: products.address
   });
     
   contactsForm.render({
     errors: contactsFormErrors,
-    phone: buyerModel.getData().phone,
-    email: buyerModel.getData().email
+    phone: products.phone,
+    email: products.email
   });
 
   if (Object.keys(orderFormErrors).length !== 0) {
@@ -173,35 +175,17 @@ events.on('form:change', (data: IBuyer) => {
     buyerModel.setData({...data});
 });
 
-
-let orderFormVisited: boolean = false;
-let contactsFormVisited: boolean = false;
-
 events.on('order:checkout', () => {
-  const errors: BuyerValidationErrors = buyerModel.validateData();
-  const orderFormErrors = filterErrors(errors, orderStepErrors);
-
-  const renderedOrderForm = orderForm.render({
-    errors: orderFormVisited ? orderFormErrors : {}
-  });
-  modal.render({content: renderedOrderForm});
-  orderFormVisited = true;
+  modal.render({content: orderForm.render()});
 });
 
 events.on('order:proceed', () => {
-    const errors: BuyerValidationErrors = buyerModel.validateData();
-    const contactsFormErrors = filterErrors(errors, contactsStepErrors);
-
-    const renderedContactsForm = contactsForm.render({
-        errors: contactsFormVisited ? contactsFormErrors : {}
-    });
-    modal.render({content: renderedContactsForm});
-    contactsFormVisited = true;
+    modal.render({content: contactsForm.render()});
 });
 
 events.on('order:pay', () => {
     const order: IApiPost = {
-        ...buyerModel.validateData(),
+        ...buyerModel.getData(),
         total: basketModel.getTotalPrice(),
         items: basketModel.getItems().map(item => item.id)
     }
@@ -210,9 +194,8 @@ events.on('order:pay', () => {
         .then(data => {
             const renderedForm = successForm.render({total: data.total});
             modal.render({content: renderedForm});
-
-            orderFormVisited = false;
-            contactsFormVisited = false;
+            basketModel.clearCart();
+            buyerModel.clearData();
         })
         .catch(err => contactsForm.render({errors: {err}}));
 });

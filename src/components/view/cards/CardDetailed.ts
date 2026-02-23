@@ -1,6 +1,7 @@
 import { Card } from "./Card";
 import { ensureElement } from "../../../utils/utils";
-import { ICardActions, IProduct } from "../../../types";
+import { IProduct } from "../../../types";
+import { IEvents } from "../../base/Events";
 import { categoryMap, CDN_URL } from "../../../utils/constants";
 
 type CategoryKey = keyof typeof categoryMap;
@@ -14,7 +15,7 @@ export class CardDetailed extends Card<IProduct> {
 
   readonly titleText: string;
 
-  constructor(container: HTMLElement, actions?: ICardActions) {
+  constructor(protected events: IEvents, container: HTMLElement) {
     super(container);
 
     this.titleText = ensureElement<HTMLImageElement>('.card__title', this.container).textContent;
@@ -23,14 +24,18 @@ export class CardDetailed extends Card<IProduct> {
     this.descriptionElement = ensureElement<HTMLImageElement>('.card__text', this.container);
     this.priceElement = ensureElement<HTMLImageElement>('.card__price', this.container);
     this.buttonElement = ensureElement<HTMLButtonElement>('.card__button', this.container);
-    
-    if (actions?.onClick) {
-      this.buttonElement.addEventListener('click', actions.onClick);
-    }
+
+    this.buttonElement.addEventListener('click', () => {
+      this.events.emit('preview:toggle');
+    })
   }
 
   disableButton() {
     this.buttonElement.setAttribute('disabled', 'disabled');
+  }
+
+  ableButton() {
+    this.buttonElement.removeAttribute('disabled');
   }
 
   set buttonText(value: string) {

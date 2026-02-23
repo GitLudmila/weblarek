@@ -16,6 +16,12 @@ export class Order extends Form<TOrder> {
     this.paymentButtonsContainer = ensureElement<HTMLElement>('.order__buttons', this.container);
     this.addressElement = ensureElement<HTMLInputElement>('.form__input[name = "address"]', this.container);
 
+    
+    this.container.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      this.events.emit('form:change');
+    });
+
     this.btnSubmit.addEventListener('click', (evt) => {
       evt.preventDefault();
       this.events.emit('order:proceed');

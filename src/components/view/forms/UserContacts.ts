@@ -16,6 +16,12 @@ export class Contacts extends Form<TContacts> {
     this.emailElement = ensureElement<HTMLInputElement>('.form__input[name = "email"', this.container);
 
     this.container.addEventListener('input', this.inputHandler);
+   
+    this.container.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      this.events.emit('form:change');
+    });
+    
 
     this.btnSubmit.addEventListener('click', (evt) => {
       evt.preventDefault();
