@@ -14,25 +14,18 @@ export class ShoppingCart {
   }
 
   /**
-   * Добавляет товар в корзину по его ID.
+   * Добавляет товар в корзину.
   */
-  addItem(productId: string, productCatalog: IProduct[]): boolean {
-    const product = productCatalog.find(item => item.id === productId);
-      
-    if (!product) {
-      return false; // Товар не найден в каталоге
-    }
-
+  addItem(product: IProduct): void {
     this.items.push(product);
     this.events.emit('basket:changed');
-    return true; // Товар успешно добавлен
   }
 
   /**
-   * Удаляет товар из корзины по ID.
+   * Удаляет товар из корзины.
   */
-  removeItem(productId: string): void {
-    this.items = this.items.filter(item => item.id !== productId);
+  removeItem(product: IProduct): void {
+    this.items = this.items.filter(item => item.id !== product.id);
     this.events.emit('basket:changed');
   }
 

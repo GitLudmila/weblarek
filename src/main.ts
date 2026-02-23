@@ -121,11 +121,11 @@ events.on('basket:open', () => {
 });
 
 events.on('product-basket:add', (product: IProduct) => {
-  basketModel.addItem(product.id, productsModel.getItems());
+  basketModel.addItem(product);
 });
 
 events.on('product-basket:remove', (product: IProduct) => {
-  basketModel.removeItem(product.id);
+  basketModel.removeItem(product);
 });
 
 // События данных покупателя и формы
