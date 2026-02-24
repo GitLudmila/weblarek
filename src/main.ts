@@ -103,7 +103,6 @@ events.on('preview:toggle', () => {
   };
 
   modal.close();
-
 });
 
 // События корзины товаров
@@ -128,6 +127,9 @@ events.on('basket:open', () => {
     modal.open();
 });
 
+events.on('product-basket:remove', (product: IProduct) => {
+  basketModel.removeItem(product);
+});
 
 // События данных покупателя и формы
 function filterErrors(errors: BuyerValidationErrors, fields: string[]): BuyerValidationErrors {

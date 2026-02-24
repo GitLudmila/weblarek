@@ -22,6 +22,8 @@ export class Basket extends Component<IBasket> {
         this.btnBasket.addEventListener('click', () => {
             this.events.emit('order:checkout');
         })
+
+        this.disableButton();
     }
 
     disableButton() {
